@@ -1,6 +1,117 @@
 # UART_protocol
 
-## CODE:
+# Contents 
+ <div class="toc">
+  <ul>
+    <li><a href="#header-1">UART Interface</a></li>
+	</ul>
+</div>
+
+ <div class="toc">
+  <ul>
+    <li><a href="#header-2">How does it works?</a></li>
+</ul>
+</div>
+
+<div class="toc">
+  <ul>
+    <li><a href="#header-3">Clock for desired Baud</a></li>
+	</ul>
+</div>
+
+<div class="toc">
+  <ul>
+    <li><a href="#header-4">URAT Transmitter(TxD)</a></li>
+</ul>
+</div>
+
+<div class="toc">
+  <ul>
+    <li><a href="#header-5">UART Reciever(RxD)</a></li>
+	</ul>
+</div>
+
+<div class="toc">
+  <ul>
+    <li><a href="#header-6">Design Code for UART</a></li>
+	</ul>
+</div
+
+ <div class="toc">
+  <ul>
+    <li><a href="#header-7">Test Bench Code</a></li>
+	</ul>
+</div>
+
+
+
+## <h1 id="header-1">UART Interface</h1>
+
+ UART stands for Universal Asynchronous Receiver/Transmitter.
+ 
+• It uses two lines viz. TxD and RxD for transmit and receive functions.
+
+• It is asynchronous communication. Hence data rate should be matched between devices wanting to communicate.
+
+• It supports data rate of about 230 to 460 Kbps (maximum).
+
+• It supports distance of about 50 feet.
+
+• No common clock is being used. Moreover devices use their own independent clock signals.
+
+• UART protocol consists of start bit, 8 bits of data and stop bit.
+
+• It is also known as RS232 interface.
+
+![image](https://github.com/user-attachments/assets/cf777a7b-7367-4a73-bec2-f38f30aa1805)
+
+VCC and GND pins are not shown here. We assume that for both the devices VCC and GND are at same level, then only will able to achieve error free communication.
+
+
+## <h2 id="header-1">How does it works?</h2>
+
+![image](https://github.com/user-attachments/assets/28f2d950-cc69-4bdb-8694-e5b5dc1900c4)
+
+When the interface is in an idle state, we wil lbe getting a logic high on its pin.
+
+whenever any one device wish to start a communication, it will first send zero on the line. Data length could be varied between 5 to 9 and common data length is 8.
+
+Whenever we want to send data from device-1 to device-2 , we will makee Tx zero that will be sense by device-2 and understand that device want to send the data to it, then will serially send the data from Tx to Rx.
+
+Now, if we consider device-2 we need to sample the values which are sent by device-1.
+
+We need to focus on bid duration, we need to find out the middle and we will be sampling that value and storing it into a shift register . We will be sampling all the 8-bits of a frame.
+
+Then we will be collecting the parity bit, checking whether parity is matching to the parity that we get from the data bits and finally we sample and stop.
+
+
+## <h3 id="header-3">Clock for desired Baud</h3>
+
+We need to find out the wait count, wait count for an half clk period and wait count for an entire bid duration.
+
+Once we complete the duration of a bit we will be generating a trigger. Similarly we generate the trigger on completing tsecond bit also.
+
+So, we just need to find out the wait count for this entire period.
+
+Wait count = Fclk/ Fbaud = Input clk frequency / desured baud rate
+
+**How to generate trigger**:- We will keep on counting the clk tick. Once we reach to a wait count, we will be generating a trigger.
+
+
+## <h4 id="header-4">UART Transmitter(TxD)</h4>
+
+![image](https://github.com/user-attachments/assets/805b82b8-bb27-4ba4-aba7-ab181701b971)
+
+
+## <h5 id="header-5">UART Transmitter(TxD)</h5>
+
+![image](https://github.com/user-attachments/assets/a9b95b1f-d19b-4b35-8a95-d092b75fac04)
+
+![image](https://github.com/user-attachments/assets/3d7fa84f-ef0d-4ec2-bf5e-eac24186ed55)
+
+
+
+##  <h6 id="header-6">Design Code for UART</h6>
 ```verilog
 `timescale 1ns / 1ps 
  
@@ -124,7 +235,7 @@ assign rxdone = (rindex == 9 && bitDone == 1'b1) ? 1'b1 : 1'b0;
  endmodule
  //////////////////////////////////
 ```
-## Testbench
+## <h7 id="header-7">Test Bench Code</h7>
 ```verilog
 module tb;
  
