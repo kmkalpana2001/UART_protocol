@@ -35,7 +35,7 @@
   <ul>
     <li><a href="#header-6">Design Code for UART</a></li>
 	</ul>
-</div
+</div>
 
  <div class="toc">
   <ul>
